@@ -18,3 +18,14 @@ Also include basic placeholders for:
 - Bullet
 
 Do not implement gameplay yet, just structure and comments.
+
+Prompt 3 
+Refactor the project so that Player, Zombie, and Bullet are separate Java files.
+
+Requirements:
+- Create Player.java, Zombie.java, and Bullet.java
+- Remove inner classes from GameModel
+- Each class should be in its own file
+- Update GameModel to use these classes
+- Keep MVC structure intact
+- Do not change unrelated code

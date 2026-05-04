@@ -34,9 +34,9 @@ public class GameView extends JPanel {
         // g.fillOval((int)model.getPlayer().getX(), (int)model.getPlayer().getY(), 20, 20);
 
         // TODO: Render Zombies
-        // for (GameModel.Zombie zombie : model.getZombies()) { ... }
+        // for (Zombie zombie : model.getZombies()) { ... }
 
         // TODO: Render Bullets
-        // for (GameModel.Bullet bullet : model.getBullets()) { ... }
+        // for (Bullet bullet : model.getBullets()) { ... }
     }
 }
