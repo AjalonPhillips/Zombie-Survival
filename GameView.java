@@ -1,9 +1,9 @@
-import javax.swing.JPanel;
+`import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-
 import java.awt.Font;
+import java.util.List;
 
 /**
  * GameView.java
@@ -73,6 +73,40 @@ public class GameView extends JPanel {
             String subMsg = "You survived for " + model.getSurvivalTime() + " seconds";
             int subWidth = g.getFontMetrics().stringWidth(subMsg);
             g.drawString(subMsg, (WIDTH - subWidth) / 2, HEIGHT / 2 + 40);
+        }
+
+        // Render Upgrade Screen
+        if (model.isUpgrading()) {
+            g.setColor(new Color(0, 0, 0, 200)); // Darker overlay
+            g.fillRect(0, 0, WIDTH, HEIGHT);
+            
+            g.setColor(Color.YELLOW);
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+            String title = "CHOOSE AN UPGRADE";
+            int titleWidth = g.getFontMetrics().stringWidth(title);
+            g.drawString(title, (WIDTH - titleWidth) / 2, 150);
+            
+            List<UpgradeManager.UpgradeType> choices = model.getCurrentChoices();
+            g.setFont(new Font("Arial", Font.PLAIN, 24));
+            for (int i = 0; i < choices.size(); i++) {
+                g.setColor(Color.WHITE);
+                String choiceStr = (i + 1) + ". " + choices.get(i).description;
+                int choiceWidth = g.getFontMetrics().stringWidth(choiceStr);
+                
+                // Draw a box for each choice
+                g.setColor(new Color(255, 255, 255, 50));
+                g.fillRect(WIDTH/2 - 200, 220 + i*80, 400, 60);
+                g.setColor(Color.WHITE);
+                g.drawRect(WIDTH/2 - 200, 220 + i*80, 400, 60);
+                
+                g.drawString(choiceStr, (WIDTH - choiceWidth) / 2, 258 + i*80);
+            }
+            
+            g.setColor(Color.GRAY);
+            g.setFont(new Font("Arial", Font.ITALIC, 18));
+            String instruct = "Press 1, 2, or 3 to select";
+            int instWidth = g.getFontMetrics().stringWidth(instruct);
+            g.drawString(instruct, (WIDTH - instWidth) / 2, 500);
         }
     }
 }

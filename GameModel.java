@@ -33,6 +33,8 @@ public class GameModel {
     private double lastDy = -1;
     
     private boolean gameOver = false;
+    private boolean isUpgrading = false;
+    private List<UpgradeManager.UpgradeType> currentChoices;
 
     public GameModel() {
         player = new Player();
@@ -46,14 +48,14 @@ public class GameModel {
      * Updates the game state. Called every frame.
      */
     public void update(boolean up, boolean down, boolean left, boolean right) {
-        if (gameOver) return;
+        if (gameOver || isUpgrading) return;
 
         totalFrames++;
         updateDifficulty();
         
-        // Apply random upgrade every 30 seconds
+        // Trigger upgrade every 30 seconds
         if (totalFrames > 0 && totalFrames % 1800 == 0) {
-            UpgradeManager.applyRandomUpgrade(this);
+            triggerUpgrade();
         }
 
         // Handle fire cooldown
@@ -176,6 +178,22 @@ public class GameModel {
         }
         zombies.add(new Zombie(x, y));
     }
+
+    private void triggerUpgrade() {
+        isUpgrading = true;
+        currentChoices = UpgradeManager.getRandomUpgrades(3);
+    }
+
+    public void selectUpgrade(int index) {
+        if (isUpgrading && index >= 0 && index < currentChoices.size()) {
+            UpgradeManager.applyUpgrade(this, currentChoices.get(index));
+            isUpgrading = false;
+            currentChoices = null;
+        }
+    }
+
+    public boolean isUpgrading() { return isUpgrading; }
+    public List<UpgradeManager.UpgradeType> getCurrentChoices() { return currentChoices; }
 
     public int getSurvivalTime() {
         return (int) (totalFrames / 60);

@@ -93,3 +93,15 @@ Requirements:
 Create a simple UpgradeManager class
 
 Do NOT add UI selection yet — apply upgrades automatically.
+
+Prompt 9 
+Improve the power-up system.
+
+Requirements:
+- Pause the game every 30 seconds
+- Show 3 upgrade choices on screen
+- Let the player select using keys (1, 2, 3)
+- Apply the selected upgrade
+- Resume the game
+
+Keep UI simple using Swing drawing.
