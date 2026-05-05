@@ -20,6 +20,15 @@ public class Player {
         this.y += dy * SPEED;
     }
 
+    public void takeDamage(int amount) {
+        this.health -= amount;
+        if (this.health < 0) this.health = 0;
+    }
+
+    public boolean isDead() {
+        return health <= 0;
+    }
+
     public double getX() { return x; }
     public double getY() { return y; }
     public int getHealth() { return health; }

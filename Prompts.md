@@ -67,3 +67,15 @@ Requirements:
 - Render bullets in GameView
 
 Do NOT modify zombie behavior yet.
+
+Prompt 7
+Add a survival system.
+
+Requirements:
+- Add a timer showing how long the player has survived
+- Increase zombie spawn rate over time
+- Gradually increase zombie speed
+- Display survival time in GameView
+
+Do NOT change existing gameplay mechanics.
+

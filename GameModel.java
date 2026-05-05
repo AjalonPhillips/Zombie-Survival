@@ -22,6 +22,8 @@ public class GameModel {
     // Facing direction for shooting
     private double lastDx = 0;
     private double lastDy = -1;
+    
+    private boolean gameOver = false;
 
     public GameModel() {
         player = new Player();
@@ -35,6 +37,8 @@ public class GameModel {
      * Updates the game state. Called every frame.
      */
     public void update(boolean up, boolean down, boolean left, boolean right) {
+        if (gameOver) return;
+
         // Player movement
         double dx = 0;
         double dy = 0;
@@ -63,6 +67,39 @@ public class GameModel {
         // Zombie logic
         updateZombies();
         handleSpawning();
+        
+        // Collision detection
+        checkCollisions();
+        
+        if (player.isDead()) {
+            gameOver = true;
+        }
+    }
+
+    private void checkCollisions() {
+        // Bullet vs Zombie
+        for (int i = bullets.size() - 1; i >= 0; i--) {
+            Bullet b = bullets.get(i);
+            for (int j = zombies.size() - 1; j >= 0; j--) {
+                Zombie z = zombies.get(j);
+                
+                double dist = Math.sqrt(Math.pow(b.getX() - z.getX(), 2) + Math.pow(b.getY() - z.getY(), 2));
+                if (dist < 20) { // Collision radius
+                    bullets.remove(i);
+                    zombies.remove(j);
+                    break; // Bullet is gone, move to next
+                }
+            }
+        }
+        
+        // Zombie vs Player
+        for (int i = zombies.size() - 1; i >= 0; i--) {
+            Zombie z = zombies.get(i);
+            double dist = Math.sqrt(Math.pow(player.getX() - z.getX(), 2) + Math.pow(player.getY() - z.getY(), 2));
+            if (dist < 25) { // Collision radius
+                player.takeDamage(1); // Small continuous damage on contact
+            }
+        }
     }
 
     public void shoot() {
@@ -129,6 +166,7 @@ public class GameModel {
     public Player getPlayer() { return player; }
     public List<Zombie> getZombies() { return zombies; }
     public List<Bullet> getBullets() { return bullets; }
+    public boolean isGameOver() { return gameOver; }
 
     // TODO: Implement methods for game logic (e.g., movePlayer, updateZombies, checkCollisions)
 }

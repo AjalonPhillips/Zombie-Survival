@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import java.awt.Font;
+
 /**
  * GameView.java
  * 
@@ -44,6 +46,28 @@ public class GameView extends JPanel {
         g.setColor(Color.YELLOW);
         for (Bullet bullet : model.getBullets()) {
             g.fillOval((int)bullet.getX() - 5, (int)bullet.getY() - 5, 10, 10);
+        }
+        
+        // Render UI
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Health: " + player.getHealth(), 20, 30);
+        
+        // Render Game Over Screen
+        if (model.isGameOver()) {
+            g.setColor(new Color(0, 0, 0, 150)); // Semi-transparent black
+            g.fillRect(0, 0, WIDTH, HEIGHT);
+            
+            g.setColor(Color.RED);
+            g.setFont(new Font("Arial", Font.BOLD, 50));
+            String msg = "GAME OVER";
+            int msgWidth = g.getFontMetrics().stringWidth(msg);
+            g.drawString(msg, (WIDTH - msgWidth) / 2, HEIGHT / 2);
+            
+            g.setFont(new Font("Arial", Font.PLAIN, 20));
+            String subMsg = "Zombies have taken over...";
+            int subWidth = g.getFontMetrics().stringWidth(subMsg);
+            g.drawString(subMsg, (WIDTH - subWidth) / 2, HEIGHT / 2 + 50);
         }
     }
 }
