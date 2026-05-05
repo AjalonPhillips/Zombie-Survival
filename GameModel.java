@@ -17,7 +17,11 @@ public class GameModel {
     private List<Bullet> bullets;
     private Random random;
     private int spawnTimer = 0;
-    private static final int SPAWN_THRESHOLD = 120; // ~2 seconds at 60 FPS
+    private static final int INITIAL_SPAWN_THRESHOLD = 120; // 2 seconds
+    private int currentSpawnThreshold = INITIAL_SPAWN_THRESHOLD;
+    
+    private long totalFrames = 0;
+    private double currentZombieSpeed = 2.0;
     
     // Facing direction for shooting
     private double lastDx = 0;
@@ -39,10 +43,13 @@ public class GameModel {
     public void update(boolean up, boolean down, boolean left, boolean right) {
         if (gameOver) return;
 
+        totalFrames++;
+        updateDifficulty();
+
         // Player movement
         double dx = 0;
         double dy = 0;
-
+        // ... (existing logic)
         if (up) dy -= 1;
         if (down) dy += 1;
         if (left) dx -= 1;
@@ -73,6 +80,17 @@ public class GameModel {
         
         if (player.isDead()) {
             gameOver = true;
+        }
+    }
+
+    private void updateDifficulty() {
+        // Every 5 seconds (300 frames), slightly increase difficulty
+        if (totalFrames > 0 && totalFrames % 300 == 0) {
+            if (currentSpawnThreshold > 25) {
+                currentSpawnThreshold -= 3;
+            }
+            currentZombieSpeed += 0.1;
+            System.out.println("Difficulty increased! Speed: " + currentZombieSpeed + ", Spawn Rate: " + currentSpawnThreshold);
         }
     }
 
@@ -121,16 +139,20 @@ public class GameModel {
 
     private void updateZombies() {
         for (Zombie zombie : zombies) {
-            zombie.moveToward(player.getX(), player.getY());
+            zombie.moveToward(player.getX(), player.getY(), currentZombieSpeed);
         }
     }
 
     private void handleSpawning() {
         spawnTimer++;
-        if (spawnTimer >= SPAWN_THRESHOLD) {
+        if (spawnTimer >= currentSpawnThreshold) {
             spawnZombie();
             spawnTimer = 0;
         }
+    }
+
+    public int getSurvivalTime() {
+        return (int) (totalFrames / 60);
     }
 
     private void spawnZombie() {

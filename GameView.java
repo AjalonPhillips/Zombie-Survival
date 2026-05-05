@@ -53,6 +53,10 @@ public class GameView extends JPanel {
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Health: " + player.getHealth(), 20, 30);
         
+        String timeStr = "Survived: " + model.getSurvivalTime() + "s";
+        int timeWidth = g.getFontMetrics().stringWidth(timeStr);
+        g.drawString(timeStr, WIDTH - timeWidth - 20, 30);
+        
         // Render Game Over Screen
         if (model.isGameOver()) {
             g.setColor(new Color(0, 0, 0, 150)); // Semi-transparent black
@@ -62,12 +66,13 @@ public class GameView extends JPanel {
             g.setFont(new Font("Arial", Font.BOLD, 50));
             String msg = "GAME OVER";
             int msgWidth = g.getFontMetrics().stringWidth(msg);
-            g.drawString(msg, (WIDTH - msgWidth) / 2, HEIGHT / 2);
+            g.drawString(msg, (WIDTH - msgWidth) / 2, HEIGHT / 2 - 20);
             
-            g.setFont(new Font("Arial", Font.PLAIN, 20));
-            String subMsg = "Zombies have taken over...";
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.PLAIN, 24));
+            String subMsg = "You survived for " + model.getSurvivalTime() + " seconds";
             int subWidth = g.getFontMetrics().stringWidth(subMsg);
-            g.drawString(subMsg, (WIDTH - subWidth) / 2, HEIGHT / 2 + 50);
+            g.drawString(subMsg, (WIDTH - subWidth) / 2, HEIGHT / 2 + 40);
         }
     }
 }
