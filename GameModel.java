@@ -15,10 +15,13 @@ public class GameModel {
     private Player player;
     private List<Zombie> zombies;
     private List<Bullet> bullets;
-    
     private Random random;
     private int spawnTimer = 0;
     private static final int SPAWN_THRESHOLD = 120; // ~2 seconds at 60 FPS
+    
+    // Facing direction for shooting
+    private double lastDx = 0;
+    private double lastDy = -1;
 
     public GameModel() {
         player = new Player();
@@ -41,17 +44,42 @@ public class GameModel {
         if (left) dx -= 1;
         if (right) dx += 1;
 
-        if (dx != 0 && dy != 0) {
+        if (dx != 0 || dy != 0) {
+            // Normalize for movement and facing
             double length = Math.sqrt(dx * dx + dy * dy);
             dx /= length;
             dy /= length;
+            
+            // Update facing direction
+            lastDx = dx;
+            lastDy = dy;
         }
 
         player.move(dx, dy);
 
+        // Update Bullets
+        updateBullets();
+
         // Zombie logic
         updateZombies();
         handleSpawning();
+    }
+
+    public void shoot() {
+        // Spawn bullet at player position in the direction they are facing
+        bullets.add(new Bullet(player.getX(), player.getY(), lastDx, lastDy));
+    }
+
+    private void updateBullets() {
+        for (int i = bullets.size() - 1; i >= 0; i--) {
+            Bullet b = bullets.get(i);
+            b.update();
+            
+            // Remove if off screen
+            if (b.getX() < -50 || b.getX() > 850 || b.getY() < -50 || b.getY() > 650) {
+                bullets.remove(i);
+            }
+        }
     }
 
     private void updateZombies() {

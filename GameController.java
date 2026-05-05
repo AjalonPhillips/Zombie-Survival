@@ -57,6 +57,7 @@ public class GameController implements KeyListener, ActionListener {
             case KeyEvent.VK_S -> down = true;
             case KeyEvent.VK_A -> left = true;
             case KeyEvent.VK_D -> right = true;
+            case KeyEvent.VK_SPACE -> model.shoot();
         }
     }
 

@@ -40,7 +40,10 @@ public class GameView extends JPanel {
             g.fillOval((int)zombie.getX() - 15, (int)zombie.getY() - 15, 30, 30);
         }
 
-        // TODO: Render Bullets
-        // for (Bullet bullet : model.getBullets()) { ... }
+        // Render Bullets
+        g.setColor(Color.YELLOW);
+        for (Bullet bullet : model.getBullets()) {
+            g.fillOval((int)bullet.getX() - 5, (int)bullet.getY() - 5, 10, 10);
+        }
     }
 }

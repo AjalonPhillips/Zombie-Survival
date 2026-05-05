@@ -54,3 +54,16 @@ Requirements:
 
 Do NOT add combat yet.
 Keep existing movement working.
+
+Prompt 6 
+Add shooting mechanics.
+
+Requirements:
+- Player can shoot using spacebar
+- Create Bullet objects with direction
+- Store bullets in GameModel
+- Update bullet positions each frame
+- Remove bullets when off screen
+- Render bullets in GameView
+
+Do NOT modify zombie behavior yet.
