@@ -6,8 +6,7 @@
 public class Player {
     private double x, y;
     private int health;
-
-    private static final double SPEED = 5.0;
+    private double speed = 5.0;
 
     public Player() {
         this.x = 400; // Center screen
@@ -16,8 +15,17 @@ public class Player {
     }
 
     public void move(double dx, double dy) {
-        this.x += dx * SPEED;
-        this.y += dy * SPEED;
+        this.x += dx * speed;
+        this.y += dy * speed;
+    }
+
+    public void heal(int amount) {
+        this.health += amount;
+        if (this.health > 100) this.health = 100;
+    }
+
+    public void increaseSpeed(double amount) {
+        this.speed += amount;
     }
 
     public void takeDamage(int amount) {

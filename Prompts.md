@@ -80,4 +80,16 @@ Requirements:
 Do NOT change existing gameplay mechanics.
 
 Prompt 8 
+Add a power-up system.
 
+Requirements:
+- Every 30 seconds, give the player a random upgrade
+- Upgrades include:
+  - Increase movement speed
+  - Increase bullet speed
+  - Increase fire rate
+  - Restore health
+
+Create a simple UpgradeManager class
+
+Do NOT add UI selection yet — apply upgrades automatically.

@@ -6,21 +6,20 @@
 public class Bullet {
     private double x, y;
     private double dx, dy;
-    private static final double SPEED = 10.0;
 
-    public Bullet(double x, double y, double dx, double dy) {
+    public Bullet(double x, double y, double dx, double dy, double speed) {
         this.x = x;
         this.y = y;
         
         // Normalize direction vector
         double length = Math.sqrt(dx * dx + dy * dy);
         if (length > 0) {
-            this.dx = (dx / length) * SPEED;
-            this.dy = (dy / length) * SPEED;
+            this.dx = (dx / length) * speed;
+            this.dy = (dy / length) * speed;
         } else {
             // Default to shooting upward if no direction
             this.dx = 0;
-            this.dy = -SPEED;
+            this.dy = -speed;
         }
     }
 
