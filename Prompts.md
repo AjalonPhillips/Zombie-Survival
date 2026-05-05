@@ -29,3 +29,28 @@ Requirements:
 - Update GameModel to use these classes
 - Keep MVC structure intact
 - Do not change unrelated code
+
+Prompt 4 
+Add player movement.
+
+Requirements:
+- Player should move using WASD keys
+- Movement should be smooth (update position every frame)
+- Store player position in GameModel
+- Handle input in GameController
+- Render player in GameView as a simple rectangle
+
+Do NOT add enemies or shooting yet.
+Do NOT refactor unrelated code.
+
+Prompt 5 
+Add zombies to the game.
+
+Requirements:
+- Create a list of Zombie objects in GameModel
+- Spawn a zombie every 2 seconds at random screen edges
+- Zombies should move toward the player position
+- Render zombies in GameView as simple shapes
+
+Do NOT add combat yet.
+Keep existing movement working.

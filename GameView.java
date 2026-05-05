@@ -29,12 +29,16 @@ public class GameView extends JPanel {
         
         if (model == null) return;
 
-        // TODO: Render Player
-        // g.setColor(Color.BLUE);
-        // g.fillOval((int)model.getPlayer().getX(), (int)model.getPlayer().getY(), 20, 20);
+        // Render Player
+        Player player = model.getPlayer();
+        g.setColor(Color.BLUE);
+        g.fillRect((int)player.getX() - 15, (int)player.getY() - 15, 30, 30);
 
-        // TODO: Render Zombies
-        // for (Zombie zombie : model.getZombies()) { ... }
+        // Render Zombies
+        g.setColor(new Color(34, 139, 34)); // Forest Green
+        for (Zombie zombie : model.getZombies()) {
+            g.fillOval((int)zombie.getX() - 15, (int)zombie.getY() - 15, 30, 30);
+        }
 
         // TODO: Render Bullets
         // for (Bullet bullet : model.getBullets()) { ... }

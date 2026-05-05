@@ -1,5 +1,10 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 /**
  * GameController.java
@@ -7,10 +12,16 @@ import javax.swing.SwingUtilities;
  * This class represents the Controller in the MVC architecture.
  * It contains the main method, connects the Model and View, and handles user input.
  */
-public class GameController {
+public class GameController implements KeyListener, ActionListener {
     private GameModel model;
     private GameView view;
     private JFrame frame;
+    
+    // Movement flags
+    private boolean up, down, left, right;
+    
+    // Game loop timer (approx 60 FPS)
+    private Timer timer;
 
     public GameController() {
         // Initialize Model and View
@@ -20,7 +31,48 @@ public class GameController {
         // Set up the JFrame
         setupWindow();
         
-        System.out.println("Controller initialized.");
+        // Register key listener
+        frame.addKeyListener(this);
+        
+        // Initialize and start the game loop
+        timer = new Timer(16, this); // ~60 FPS
+        timer.start();
+        
+        System.out.println("Controller initialized with game loop.");
+    }
+
+    /**
+     * Action performed by the Timer (the game loop).
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        model.update(up, down, left, right);
+        view.repaint();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_W -> up = true;
+            case KeyEvent.VK_S -> down = true;
+            case KeyEvent.VK_A -> left = true;
+            case KeyEvent.VK_D -> right = true;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_W -> up = false;
+            case KeyEvent.VK_S -> down = false;
+            case KeyEvent.VK_A -> left = false;
+            case KeyEvent.VK_D -> right = false;
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // Not used
     }
 
     /**
