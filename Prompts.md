@@ -155,3 +155,6 @@ zombie variety (sprinters light blue, brutes dark green)
 Temporary powerup drops
 Reload mechanics
 Paricle effects 
+
+Prompt 20 
+Can all powerups gained flash what was gained at the center of the screen? the text should fade away after about 3 seconds

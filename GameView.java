@@ -180,6 +180,14 @@ public class GameView extends JPanel {
         g.drawRoundRect(width - hintWidth - 30, 40, hintWidth + 20, 25, 10, 10);
         g.setColor(Color.WHITE);
         g.drawString(pauseHint, width - hintWidth - 20, 58);
+
+        // Draw Power-up Notification
+        if (model.getNotificationTimer() > 0) {
+            int alpha = Math.min(255, (int)(255 * (model.getNotificationTimer() / 60.0))); 
+            g.setColor(new Color(255, 255, 0, alpha));
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+            drawCenteredString(g, model.getNotificationText(), height / 2 - 50, width);
+        }
     }
 
     private void drawPauseScreen(Graphics2D g, int width, int height) {

@@ -64,6 +64,11 @@ public class GameModel {
     // Mouse Pos for Crosshair
     private int mouseX, mouseY;
 
+    // Power-up Notifications
+    private String notificationText = "";
+    private int notificationTimer = 0;
+    private final int MAX_NOTIFICATION_TIME = 180; // 3 seconds
+
     public GameModel(int width, int height) {
         this.worldWidth = width;
         this.worldHeight = height;
@@ -94,6 +99,8 @@ public class GameModel {
         flashFrames = 0;
         lastDx = 0;
         lastDy = -1;
+        notificationText = "";
+        notificationTimer = 0;
         state = GameState.PLAYING;
     }
 
@@ -166,6 +173,7 @@ public class GameModel {
             if (reloadTimer == 0) currentAmmo = magSize;
         }
         if (flashFrames > 0) flashFrames--;
+        if (notificationTimer > 0) notificationTimer--;
 
         double dx = 0, dy = 0;
         if (up) dy -= 1;
@@ -269,6 +277,8 @@ public class GameModel {
     }
 
     private void applyPowerUp(PowerUp.Type type) {
+        notificationText = type.message;
+        notificationTimer = MAX_NOTIFICATION_TIME;
         switch (type) {
             case HEALTH -> player.heal(20);
             case AMMO -> currentAmmo = magSize;
@@ -419,4 +429,7 @@ public class GameModel {
     public void setMousePos(int x, int y) { this.mouseX = x; this.mouseY = y; }
     public int getMouseX() { return mouseX; }
     public int getMouseY() { return mouseY; }
+    public String getNotificationText() { return notificationText; }
+    public int getNotificationTimer() { return notificationTimer; }
+    public int getMaxNotificationTime() { return MAX_NOTIFICATION_TIME; }
 }
