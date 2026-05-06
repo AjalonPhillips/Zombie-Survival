@@ -287,7 +287,7 @@ public class GameModel {
             for (Zombie z : zombies) {
                 double dist = Math.sqrt(Math.pow(player.getX() - z.getX(), 2) + Math.pow(player.getY() - z.getY(), 2));
                 if (dist < 25) {
-                    player.takeDamage(1);
+                    player.takeDamage(10);
                     flashFrames = 30; // Half second flash
                     break;
                 }
