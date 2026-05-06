@@ -90,18 +90,38 @@ public class GameController implements KeyListener, ActionListener, MouseListene
             case KeyEvent.VK_1 -> model.selectUpgrade(0);
             case KeyEvent.VK_2 -> model.selectUpgrade(1);
             case KeyEvent.VK_3 -> model.selectUpgrade(2);
-            case KeyEvent.VK_UP -> model.navigateMenu(-1);
-            case KeyEvent.VK_DOWN -> model.navigateMenu(1);
-            case KeyEvent.VK_ENTER -> model.selectMenuOption();
+            case KeyEvent.VK_UP -> {
+                if (model.getState() == GameModel.GameState.PAUSED) {
+                    model.navigatePauseMenu(-1);
+                } else {
+                    model.navigateMenu(-1);
+                }
+            }
+            case KeyEvent.VK_DOWN -> {
+                if (model.getState() == GameModel.GameState.PAUSED) {
+                    model.navigatePauseMenu(1);
+                } else {
+                    model.navigateMenu(1);
+                }
+            }
+            case KeyEvent.VK_ENTER -> {
+                if (model.getState() == GameModel.GameState.PAUSED) {
+                    model.selectPauseOption();
+                } else {
+                    model.selectMenuOption();
+                }
+            }
+            case KeyEvent.VK_P -> model.togglePause();
             case KeyEvent.VK_T -> {
                 if (model.getState() == GameModel.GameState.OPTIONS) {
                     model.toggleShootControl();
                 }
             }
             case KeyEvent.VK_ESCAPE -> {
-                if (model.getState() == GameModel.GameState.OPTIONS
-                        || model.getState() == GameModel.GameState.OBJECTIVE) {
-                    model.selectMenuOption(); // Goes back to menu
+                if (model.getState() == GameModel.GameState.PLAYING || model.getState() == GameModel.GameState.PAUSED) {
+                    model.togglePause();
+                } else if (model.getState() == GameModel.GameState.OPTIONS || model.getState() == GameModel.GameState.OBJECTIVE) {
+                    model.selectMenuOption(); 
                 }
             }
             case KeyEvent.VK_R -> {

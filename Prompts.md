@@ -134,3 +134,7 @@ In the options menu the shooting preference is toggled with T and Enter and leav
 
 Prompt 15
 Now inside the game, when playing add a pause button right under the survival counter? in the pause menu add button that  offer resume and quit attempt. If the user should choose quit attempt bring them back to the start menu
+
+Prompt 16 
+Troubleshooting
+The pause button works only on click. Thats fine I like the option between using P and clicking it to pause. 2 problems, P doesnt work to pause the game and when clicking the button the screen goes grey and theres no interface and theres no way to exit

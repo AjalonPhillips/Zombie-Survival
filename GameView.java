@@ -35,6 +35,10 @@ public class GameView extends JPanel {
             case OBJECTIVE -> drawObjectiveScreen(g, width, height);
             case OPTIONS -> drawOptionsScreen(g, width, height);
             case PLAYING -> drawGame(g, width, height);
+            case PAUSED -> {
+                drawGame(g, width, height);
+                drawPauseScreen(g, width, height);
+            }
             case UPGRADING -> {
                 drawGame(g, width, height);
                 drawUpgradeScreen(g, width, height);
@@ -90,7 +94,7 @@ public class GameView extends JPanel {
         drawCenteredString(g, "As time passes, zombies will spawn faster and move quicker.", startY + 120, width);
 
         g.setColor(Color.YELLOW);
-        drawCenteredString(g, "Controls: WASD to move, SPACE to shoot", startY + 200, width);
+        drawCenteredString(g, "Controls: WASD to move, SPACE or LMB (changed in Options) to shoot", startY + 200, width);
 
         g.setColor(Color.GRAY);
         drawCenteredString(g, "Press ENTER to return to Menu", height - 100, width);
@@ -115,7 +119,7 @@ public class GameView extends JPanel {
 
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.ITALIC, 18));
-        drawCenteredString(g, "Press 'T' to Toggle - Press ENTER to Go Back", 400, width);
+        drawCenteredString(g, "Press 'T' to Toggle Setting - Press ENTER to Go Back", 400, width);
 
         g.setColor(Color.GRAY);
         drawCenteredString(g, "Settings take effect immediately.", height - 100, width);
@@ -162,6 +166,33 @@ public class GameView extends JPanel {
 
         g.setColor(Color.WHITE);
         g.drawString(pauseHint, width - hintWidth - 20, 58);
+    }
+
+    private void drawPauseScreen(Graphics g, int width, int height) {
+        g.setColor(new Color(0, 0, 0, 150));
+        g.fillRect(0, 0, width, height);
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 50));
+        drawCenteredString(g, "PAUSED", height / 2 - 100, width);
+
+        String[] options = model.getPauseOptions();
+        int selected = model.getPauseIndex();
+
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+        for (int i = 0; i < options.length; i++) {
+            if (i == selected) {
+                g.setColor(Color.YELLOW);
+                drawCenteredString(g, "> " + options[i] + " <", height / 2 + i * 60, width);
+            } else {
+                g.setColor(Color.WHITE);
+                drawCenteredString(g, options[i], height / 2 + i * 60, width);
+            }
+        }
+        
+        g.setColor(Color.GRAY);
+        g.setFont(new Font("Arial", Font.ITALIC, 18));
+        drawCenteredString(g, "Use Arrow Keys to Navigate - ENTER to Select", height / 2 + 180, width);
     }
 
     private void drawUpgradeScreen(Graphics g, int width, int height) {
