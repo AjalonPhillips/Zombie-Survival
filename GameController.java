@@ -162,7 +162,7 @@ public class GameController implements KeyListener, ActionListener, MouseListene
 
             if (model.isMouseShoot()) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
-                    model.shoot();
+                    model.shoot(e.getX(), e.getY());
                 }
             }
         }

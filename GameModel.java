@@ -228,6 +228,21 @@ public class GameModel {
         }
     }
 
+    public void shoot(double targetX, double targetY) {
+        if (state == GameState.PLAYING && fireCooldown <= 0) {
+            double dx = targetX - player.getX();
+            double dy = targetY - player.getY();
+            double length = Math.sqrt(dx * dx + dy * dy);
+            
+            if (length > 0) {
+                dx /= length;
+                dy /= length;
+                bullets.add(new Bullet(player.getX(), player.getY(), dx, dy, bulletSpeed));
+                fireCooldown = fireRateThreshold;
+            }
+        }
+    }
+
     public void increaseBulletSpeed(double amount) {
         this.bulletSpeed += amount;
     }

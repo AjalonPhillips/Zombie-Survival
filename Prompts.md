@@ -141,3 +141,6 @@ The pause button works only on click. Thats fine I like the option between using
 
 Prompt 17
 Can you make it so the screen boarders respective to windowed or full screen are the limits to player movemnet? Right now the player can travel outside of th boarders thus outside the playable area 
+
+Prompt 18
+Can a quality of life change be added where if the player chooses for their shoot button to be a mouse click that instead of firing the way their traveling they shoot where their cursor is?
