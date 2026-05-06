@@ -16,14 +16,17 @@ public class UpgradeManager {
         HEAL("Restore 25 Health");
 
         public final String description;
-        UpgradeType(String desc) { this.description = desc; }
+
+        UpgradeType(String desc) {
+            this.description = desc;
+        }
     }
 
     private static final Random random = new Random();
 
     public static List<UpgradeType> getRandomUpgrades(int count) {
         List<UpgradeType> all = new ArrayList<>(List.of(UpgradeType.values()));
-        Collections.shuffle(all);
+        Collections.shuffle(all, random);
         return all.subList(0, Math.min(count, all.size()));
     }
 
