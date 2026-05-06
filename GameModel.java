@@ -27,6 +27,8 @@ public class GameModel {
     private List<Bullet> bullets;
     private List<Particle> particles;
     private List<PowerUp> powerups;
+    private List<BloodDecal> decals;
+    private List<RainDrop> raindrops;
     private Random random;
     
     // Spawning and Difficulty
@@ -85,7 +87,15 @@ public class GameModel {
         bullets = new ArrayList<>();
         particles = new ArrayList<>();
         powerups = new ArrayList<>();
+        decals = new ArrayList<>();
+        raindrops = new ArrayList<>();
         random = new Random();
+        
+        // Initialize Rain
+        for (int i = 0; i < 100; i++) {
+            raindrops.add(new RainDrop(random.nextInt(worldWidth), random.nextInt(worldHeight), 5 + random.nextDouble() * 10));
+        }
+
         spawnTimer = 0;
         currentSpawnThreshold = INITIAL_SPAWN_THRESHOLD;
         currentZombieSpeed = 2.0;
@@ -199,6 +209,7 @@ public class GameModel {
         updateZombies();
         updateParticles();
         updatePowerUps();
+        updateRain();
         handleSpawning();
         checkCollisions();
         
@@ -216,6 +227,10 @@ public class GameModel {
             if (currentSpawnThreshold > 25) currentSpawnThreshold -= 3;
             currentZombieSpeed += 0.1;
         }
+    }
+
+    private void updateRain() {
+        for (RainDrop r : raindrops) r.update(worldHeight);
     }
 
     private void updateParticles() {
@@ -246,6 +261,11 @@ public class GameModel {
                     if (z.isDead()) {
                         zombies.remove(j);
                         score += (z.getType() == Zombie.Type.BRUTE) ? 500 : 100;
+                        
+                        // Add blood decal
+                        decals.add(new BloodDecal(z.getX(), z.getY(), z.getColor(), 20 + random.nextInt(20)));
+                        if (decals.size() > 150) decals.remove(0); // Performance cap
+
                         if (random.nextDouble() < 0.1) spawnPowerUp(z.getX(), z.getY());
                     }
                     break;
@@ -411,6 +431,8 @@ public class GameModel {
     public List<Bullet> getBullets() { return bullets; }
     public List<Particle> getParticles() { return particles; }
     public List<PowerUp> getPowerUps() { return powerups; }
+    public List<BloodDecal> getDecals() { return decals; }
+    public List<RainDrop> getRaindrops() { return raindrops; }
     public GameState getState() { return state; }
     public List<UpgradeManager.UpgradeType> getCurrentChoices() { return currentChoices; }
     public String[] getMenuOptions() { return menuOptions; }
