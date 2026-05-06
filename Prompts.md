@@ -138,3 +138,6 @@ Now inside the game, when playing add a pause button right under the survival co
 Prompt 16 
 Troubleshooting
 The pause button works only on click. Thats fine I like the option between using P and clicking it to pause. 2 problems, P doesnt work to pause the game and when clicking the button the screen goes grey and theres no interface and theres no way to exit
+
+Prompt 17
+Can you make it so the screen boarders respective to windowed or full screen are the limits to player movemnet? Right now the player can travel outside of th boarders thus outside the playable area 

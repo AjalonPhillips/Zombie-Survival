@@ -167,6 +167,18 @@ public class GameModel {
 
         player.move(dx, dy);
 
+        // Clamp player position to world boundaries
+        double px = player.getX();
+        double py = player.getY();
+        double halfSize = 15.0; // Player is 30x30
+        
+        if (px < halfSize) px = halfSize;
+        if (px > worldWidth - halfSize) px = worldWidth - halfSize;
+        if (py < halfSize) py = halfSize;
+        if (py > worldHeight - halfSize) py = worldHeight - halfSize;
+        
+        player.setPosition(px, py);
+
         updateBullets();
         updateZombies();
         handleSpawning();
