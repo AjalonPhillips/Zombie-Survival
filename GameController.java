@@ -17,23 +17,24 @@ import javax.swing.Timer;
  * GameController.java
  * 
  * This class represents the Controller in the MVC architecture.
- * It contains the main method, connects the Model and View, and handles user input.
+ * It contains the main method, connects the Model and View, and handles user
+ * input.
  */
 public class GameController implements KeyListener, ActionListener, MouseListener {
     private GameModel model;
     private GameView view;
     private JFrame frame;
-    
+
     // Movement flags
     private boolean up, down, left, right;
-    
+
     // Game loop timer (approx 60 FPS)
     private Timer timer;
 
     public GameController() {
         // Choice dialog
-        String[] options = {"Windowed", "Fullscreen"};
-        int choice = JOptionPane.showOptionDialog(null, 
+        String[] options = { "Windowed", "Fullscreen" };
+        int choice = JOptionPane.showOptionDialog(null,
                 "Choose Display Mode", "Zombie Survival",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                 null, options, options[0]);
@@ -54,15 +55,15 @@ public class GameController implements KeyListener, ActionListener, MouseListene
 
         // Set up the JFrame
         setupWindow(isFullscreen);
-        
+
         // Register listeners
         frame.addKeyListener(this);
         frame.addMouseListener(this);
-        
+
         // Initialize and start the game loop
         timer = new Timer(16, this); // ~60 FPS
         timer.start();
-        
+
         System.out.println("Controller initialized with game loop.");
     }
 
@@ -83,7 +84,8 @@ public class GameController implements KeyListener, ActionListener, MouseListene
             case KeyEvent.VK_A -> left = true;
             case KeyEvent.VK_D -> right = true;
             case KeyEvent.VK_SPACE -> {
-                if (!model.isMouseShoot()) model.shoot();
+                if (!model.isMouseShoot())
+                    model.shoot();
             }
             case KeyEvent.VK_1 -> model.selectUpgrade(0);
             case KeyEvent.VK_2 -> model.selectUpgrade(1);
@@ -97,7 +99,8 @@ public class GameController implements KeyListener, ActionListener, MouseListene
                 }
             }
             case KeyEvent.VK_ESCAPE -> {
-                if (model.getState() == GameModel.GameState.OPTIONS || model.getState() == GameModel.GameState.OBJECTIVE) {
+                if (model.getState() == GameModel.GameState.OPTIONS
+                        || model.getState() == GameModel.GameState.OBJECTIVE) {
                     model.selectMenuOption(); // Goes back to menu
                 }
             }
@@ -120,22 +123,46 @@ public class GameController implements KeyListener, ActionListener, MouseListene
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
     // MouseListener methods
     @Override
     public void mousePressed(MouseEvent e) {
-        if (model.getState() == GameModel.GameState.PLAYING && model.isMouseShoot()) {
-            if (SwingUtilities.isLeftMouseButton(e)) {
-                model.shoot();
+        if (model.getState() == GameModel.GameState.PLAYING) {
+            // Check if clicking the "Pause" area (upper-right corner)
+            int x = e.getX();
+            int y = e.getY();
+            int width = model.getWidth();
+            // Rectangle roughly covering the "Survived" and "Pause" text area
+            if (x > width - 200 && x < width && y > 0 && y < 80) {
+                model.togglePause();
+                return;
+            }
+
+            if (model.isMouseShoot()) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    model.shoot();
+                }
             }
         }
     }
 
-    @Override public void mouseReleased(MouseEvent e) {}
-    @Override public void mouseClicked(MouseEvent e) {}
-    @Override public void mouseEntered(MouseEvent e) {}
-    @Override public void mouseExited(MouseEvent e) {}
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
 
     /**
      * Configures and displays the main game window.
@@ -143,14 +170,14 @@ public class GameController implements KeyListener, ActionListener, MouseListene
     private void setupWindow(boolean isFullscreen) {
         frame = new JFrame("Zombie Survival Roguelike");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         if (isFullscreen) {
             frame.setUndecorated(true);
             frame.setResizable(false);
-            
+
             GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment()
                     .getDefaultScreenDevice();
-            
+
             if (gd.isFullScreenSupported()) {
                 gd.setFullScreenWindow(frame);
             } else {
@@ -160,14 +187,14 @@ public class GameController implements KeyListener, ActionListener, MouseListene
 
         // Add the View (JPanel) to the JFrame
         frame.add(view);
-        
+
         if (!isFullscreen) {
             // Adjust the window size to fit the preferred size of the View
             frame.pack();
             // Center the window on the screen
             frame.setLocationRelativeTo(null);
         }
-        
+
         // Make the window visible
         frame.setVisible(true);
     }

@@ -131,3 +131,6 @@ Can you add one more option to the opening screen that is titles "Options"? in t
 Prompt 14
 Troubleshooting
 In the options menu the shooting preference is toggled with T and Enter and leave with the esc key, can you make it so enter is the key that returns to the menu?
+
+Prompt 15
+Now inside the game, when playing add a pause button right under the survival counter? in the pause menu add button that  offer resume and quit attempt. If the user should choose quit attempt bring them back to the start menu

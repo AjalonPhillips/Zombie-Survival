@@ -11,12 +11,15 @@ import java.util.Random;
 public class GameModel {
     
     public enum GameState {
-        MENU, PLAYING, UPGRADING, GAME_OVER, OBJECTIVE, OPTIONS
+        MENU, PLAYING, UPGRADING, GAME_OVER, OBJECTIVE, OPTIONS, PAUSED
     }
 
     private GameState state = GameState.MENU;
     private int menuIndex = 0;
     private final String[] menuOptions = {"Start Game", "Objective", "Options", "Quit"};
+    
+    private int pauseIndex = 0;
+    private final String[] pauseOptions = {"Resume", "Quit Attempt"};
     
     private boolean isMouseShoot = false; // Default to Spacebar
 
@@ -52,7 +55,6 @@ public class GameModel {
         this.worldWidth = width;
         this.worldHeight = height;
         reset();
-        // Force state back to MENU after reset()
         this.state = GameState.MENU;
     }
 
@@ -105,6 +107,32 @@ public class GameModel {
     }
 
     public boolean isMouseShoot() { return isMouseShoot; }
+
+    public void togglePause() {
+        if (state == GameState.PLAYING) {
+            state = GameState.PAUSED;
+            pauseIndex = 0;
+        } else if (state == GameState.PAUSED) {
+            state = GameState.PLAYING;
+        }
+    }
+
+    public void navigatePauseMenu(int dir) {
+        if (state == GameState.PAUSED) {
+            pauseIndex += dir;
+            if (pauseIndex < 0) pauseIndex = pauseOptions.length - 1;
+            if (pauseIndex >= pauseOptions.length) pauseIndex = 0;
+        }
+    }
+
+    public void selectPauseOption() {
+        if (state == GameState.PAUSED) {
+            switch (pauseIndex) {
+                case 0 -> state = GameState.PLAYING; // Resume
+                case 1 -> state = GameState.MENU; // Quit Attempt
+            }
+        }
+    }
 
     /**
      * Updates the game state. Called every frame.
@@ -258,6 +286,8 @@ public class GameModel {
     public List<UpgradeManager.UpgradeType> getCurrentChoices() { return currentChoices; }
     public String[] getMenuOptions() { return menuOptions; }
     public int getMenuIndex() { return menuIndex; }
+    public String[] getPauseOptions() { return pauseOptions; }
+    public int getPauseIndex() { return pauseIndex; }
     public int getScore() { return score; }
     public int getWidth() { return worldWidth; }
     public int getHeight() { return worldHeight; }
