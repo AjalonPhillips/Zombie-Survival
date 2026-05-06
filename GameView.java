@@ -118,7 +118,8 @@ public class GameView extends JPanel {
     private void drawGame(Graphics2D g, int width, int height) {
         // Floor Decals (Blood)
         for (BloodDecal d : model.getDecals()) {
-            g.setColor(d.getColor());
+            int alpha = Math.min(100, d.getLife()); // Fade out if life < 100
+            g.setColor(new Color(d.getColor().getRed(), d.getColor().getGreen(), d.getColor().getBlue(), alpha));
             g.fillOval((int)d.getX() - d.getSize()/2, (int)d.getY() - d.getSize()/2, d.getSize(), d.getSize());
         }
 

@@ -210,6 +210,7 @@ public class GameModel {
         updateParticles();
         updatePowerUps();
         updateRain();
+        updateDecals();
         handleSpawning();
         checkCollisions();
         
@@ -231,6 +232,13 @@ public class GameModel {
 
     private void updateRain() {
         for (RainDrop r : raindrops) r.update(worldHeight);
+    }
+
+    private void updateDecals() {
+        for (int i = decals.size() - 1; i >= 0; i--) {
+            decals.get(i).update();
+            if (decals.get(i).isExpired()) decals.remove(i);
+        }
     }
 
     private void updateParticles() {
@@ -262,9 +270,8 @@ public class GameModel {
                         zombies.remove(j);
                         score += (z.getType() == Zombie.Type.BRUTE) ? 500 : 100;
                         
-                        // Add blood decal
-                        decals.add(new BloodDecal(z.getX(), z.getY(), z.getColor(), 20 + random.nextInt(20)));
-                        if (decals.size() > 150) decals.remove(0); // Performance cap
+                        // Add blood decal (10 second life)
+                        decals.add(new BloodDecal(z.getX(), z.getY(), z.getColor(), 20 + random.nextInt(20), 600));
 
                         if (random.nextDouble() < 0.1) spawnPowerUp(z.getX(), z.getY());
                     }
