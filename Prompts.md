@@ -117,3 +117,7 @@ Requirements:
 - Keep code organized and readable
 
 Do NOT rewrite the entire project.
+
+Prompt 11
+For further polish, 
+can you make it so when the window opens the first window that pops up is a choice bewtween having the game windowed and fullscreen? If the user should choose fullscreen, can the boarders in the game (Spawn Points & playable area) be changed to the fullscreen resolution?

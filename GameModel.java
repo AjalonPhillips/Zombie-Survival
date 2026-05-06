@@ -11,8 +11,12 @@ import java.util.Random;
 public class GameModel {
     
     public enum GameState {
-        START, PLAYING, UPGRADING, GAME_OVER
+        MENU, PLAYING, UPGRADING, GAME_OVER, OBJECTIVE
     }
+
+    private GameState state = GameState.MENU;
+    private int menuIndex = 0;
+    private final String[] menuOptions = {"Start Game", "Objective", "Quit"};
 
     // Game Entities
     private Player player;
@@ -37,7 +41,6 @@ public class GameModel {
     private double lastDx = 0;
     private double lastDy = -1;
     
-    private GameState state = GameState.START;
     private List<UpgradeManager.UpgradeType> currentChoices;
     
     private int worldWidth;
@@ -47,6 +50,8 @@ public class GameModel {
         this.worldWidth = width;
         this.worldHeight = height;
         reset();
+        // Force state back to MENU after reset()
+        this.state = GameState.MENU;
     }
 
     public void reset() {
@@ -67,12 +72,25 @@ public class GameModel {
         lastDx = 0;
         lastDy = -1;
         state = GameState.PLAYING;
-        System.out.println("Game Reset with dimensions: " + worldWidth + "x" + worldHeight);
     }
 
-    public void start() {
-        if (state == GameState.START) {
-            state = GameState.PLAYING;
+    public void navigateMenu(int dir) {
+        if (state == GameState.MENU) {
+            menuIndex += dir;
+            if (menuIndex < 0) menuIndex = menuOptions.length - 1;
+            if (menuIndex >= menuOptions.length) menuIndex = 0;
+        }
+    }
+
+    public void selectMenuOption() {
+        if (state == GameState.MENU) {
+            switch (menuIndex) {
+                case 0 -> reset(); // Start Game
+                case 1 -> state = GameState.OBJECTIVE; // Objective
+                case 2 -> System.exit(0); // Quit
+            }
+        } else if (state == GameState.OBJECTIVE) {
+            state = GameState.MENU;
         }
     }
 
@@ -85,15 +103,12 @@ public class GameModel {
         totalFrames++;
         updateDifficulty();
         
-        // Trigger upgrade every 30 seconds
         if (totalFrames > 0 && totalFrames % 1800 == 0) {
             triggerUpgrade();
         }
 
-        // Handle fire cooldown
         if (fireCooldown > 0) fireCooldown--;
 
-        // Player movement
         double dx = 0;
         double dy = 0;
         
@@ -112,7 +127,6 @@ public class GameModel {
 
         player.move(dx, dy);
 
-        // Update entities and check collisions
         updateBullets();
         updateZombies();
         handleSpawning();
@@ -133,7 +147,6 @@ public class GameModel {
     }
 
     private void checkCollisions() {
-        // Bullet vs Zombie
         for (int i = bullets.size() - 1; i >= 0; i--) {
             Bullet b = bullets.get(i);
             for (int j = zombies.size() - 1; j >= 0; j--) {
@@ -142,13 +155,12 @@ public class GameModel {
                 if (dist < 20) {
                     bullets.remove(i);
                     zombies.remove(j);
-                    score += 100; // Award points for kills
+                    score += 100;
                     break;
                 }
             }
         }
         
-        // Zombie vs Player
         for (Zombie z : zombies) {
             double dist = Math.sqrt(Math.pow(player.getX() - z.getX(), 2) + Math.pow(player.getY() - z.getY(), 2));
             if (dist < 25) {
@@ -232,6 +244,8 @@ public class GameModel {
     public List<Bullet> getBullets() { return bullets; }
     public GameState getState() { return state; }
     public List<UpgradeManager.UpgradeType> getCurrentChoices() { return currentChoices; }
+    public String[] getMenuOptions() { return menuOptions; }
+    public int getMenuIndex() { return menuIndex; }
     public int getScore() { return score; }
     public int getWidth() { return worldWidth; }
     public int getHeight() { return worldHeight; }

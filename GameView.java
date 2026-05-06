@@ -30,7 +30,8 @@ public class GameView extends JPanel {
         int height = model.getHeight();
 
         switch (model.getState()) {
-            case START -> drawStartScreen(g, width, height);
+            case MENU -> drawMenuScreen(g, width, height);
+            case OBJECTIVE -> drawObjectiveScreen(g, width, height);
             case PLAYING -> drawGame(g, width, height);
             case UPGRADING -> {
                 drawGame(g, width, height); 
@@ -43,18 +44,54 @@ public class GameView extends JPanel {
         }
     }
 
-    private void drawStartScreen(Graphics g, int width, int height) {
-        g.setColor(new Color(0, 0, 0, 180));
+    private void drawMenuScreen(Graphics g, int width, int height) {
+        g.setColor(new Color(20, 20, 20)); // Darker background
         g.fillRect(0, 0, width, height);
         
         g.setColor(Color.RED);
-        g.setFont(new Font("Arial", Font.BOLD, 60));
-        drawCenteredString(g, "ZOMBIE SURVIVAL", height / 2 - 50, width);
+        g.setFont(new Font("Arial", Font.BOLD, 80));
+        drawCenteredString(g, "ZOMBIE SURVIVAL", height / 2 - 150, width);
+        
+        String[] options = model.getMenuOptions();
+        int selected = model.getMenuIndex();
+        
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+        for (int i = 0; i < options.length; i++) {
+            if (i == selected) {
+                g.setColor(Color.YELLOW);
+                drawCenteredString(g, "> " + options[i] + " <", height / 2 + i * 50, width);
+            } else {
+                g.setColor(Color.WHITE);
+                drawCenteredString(g, options[i], height / 2 + i * 50, width);
+            }
+        }
+        
+        g.setColor(Color.GRAY);
+        g.setFont(new Font("Arial", Font.ITALIC, 18));
+        drawCenteredString(g, "Use Arrow Keys to Navigate - ENTER to Select", height - 50, width);
+    }
+
+    private void drawObjectiveScreen(Graphics g, int width, int height) {
+        g.setColor(new Color(20, 20, 20));
+        g.fillRect(0, 0, width, height);
+        
+        g.setColor(Color.RED);
+        g.setFont(new Font("Arial", Font.BOLD, 50));
+        drawCenteredString(g, "OBJECTIVE", 100, width);
         
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.PLAIN, 24));
-        drawCenteredString(g, "Move with WASD - Shoot with Space", height / 2 + 20, width);
-        drawCenteredString(g, "Press ENTER to Start", height / 2 + 80, width);
+        g.setFont(new Font("Arial", Font.PLAIN, 22));
+        int startY = 200;
+        drawCenteredString(g, "Survive as long as possible against the growing zombie horde.", startY, width);
+        drawCenteredString(g, "Kill zombies to earn score and stay alive.", startY + 40, width);
+        drawCenteredString(g, "Every 30 seconds, you will be offered a powerful upgrade.", startY + 80, width);
+        drawCenteredString(g, "As time passes, zombies will spawn faster and move quicker.", startY + 120, width);
+        
+        g.setColor(Color.YELLOW);
+        drawCenteredString(g, "Controls: WASD to move, SPACE to shoot", startY + 200, width);
+        
+        g.setColor(Color.GRAY);
+        drawCenteredString(g, "Press ENTER to return to Menu", height - 100, width);
     }
 
     private void drawGame(Graphics g, int width, int height) {
