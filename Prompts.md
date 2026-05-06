@@ -144,3 +144,14 @@ Can you make it so the screen boarders respective to windowed or full screen are
 
 Prompt 18
 Can a quality of life change be added where if the player chooses for their shoot button to be a mouse click that instead of firing the way their traveling they shoot where their cursor is?
+
+Prompt 19
+Add:
+Mouse Crosshair
+Damage indicators (flash red)
+Health bar over player icon
+High Score tracker
+zombie variety (sprinters light blue, brutes dark green)
+Temporary powerup drops
+Reload mechanics
+Paricle effects 

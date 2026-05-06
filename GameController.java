@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -20,7 +21,7 @@ import javax.swing.Timer;
  * It contains the main method, connects the Model and View, and handles user
  * input.
  */
-public class GameController implements KeyListener, ActionListener, MouseListener {
+public class GameController implements KeyListener, ActionListener, MouseListener, MouseMotionListener {
     private GameModel model;
     private GameView view;
     private JFrame frame;
@@ -59,6 +60,7 @@ public class GameController implements KeyListener, ActionListener, MouseListene
         // Register listeners
         frame.addKeyListener(this);
         frame.addMouseListener(this);
+        frame.addMouseMotionListener(this);
 
         // Initialize and start the game loop
         timer = new Timer(16, this); // ~60 FPS
@@ -127,6 +129,8 @@ public class GameController implements KeyListener, ActionListener, MouseListene
             case KeyEvent.VK_R -> {
                 if (model.getState() == GameModel.GameState.GAME_OVER) {
                     model.reset();
+                } else if (model.getState() == GameModel.GameState.PLAYING) {
+                    model.reload();
                 }
             }
         }
@@ -182,6 +186,17 @@ public class GameController implements KeyListener, ActionListener, MouseListene
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+
+    // MouseMotionListener methods
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        model.setMousePos(e.getX(), e.getY());
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        model.setMousePos(e.getX(), e.getY());
     }
 
     /**
