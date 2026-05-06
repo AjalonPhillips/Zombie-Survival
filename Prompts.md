@@ -105,3 +105,15 @@ Requirements:
 - Resume the game
 
 Keep UI simple using Swing drawing.
+
+Prompt 10
+Add polish to the game.
+
+Requirements:
+- Add a start screen
+- Add a game over screen
+- Allow restarting the game
+- Display score and health clearly
+- Keep code organized and readable
+
+Do NOT rewrite the entire project.

@@ -61,6 +61,12 @@ public class GameController implements KeyListener, ActionListener {
             case KeyEvent.VK_1 -> model.selectUpgrade(0);
             case KeyEvent.VK_2 -> model.selectUpgrade(1);
             case KeyEvent.VK_3 -> model.selectUpgrade(2);
+            case KeyEvent.VK_ENTER -> model.start();
+            case KeyEvent.VK_R -> {
+                if (model.getState() == GameModel.GameState.GAME_OVER) {
+                    model.reset();
+                }
+            }
         }
     }
 

@@ -10,6 +10,10 @@ import java.util.Random;
  */
 public class GameModel {
     
+    public enum GameState {
+        START, PLAYING, UPGRADING, GAME_OVER
+    }
+
     // Game Entities
     private Player player;
     private List<Zombie> zombies;
@@ -25,30 +29,51 @@ public class GameModel {
     // Player Stats / Upgrades
     private long totalFrames = 0;
     private double bulletSpeed = 10.0;
-    private int fireRateThreshold = 20; // Frames between shots
+    private int fireRateThreshold = 20; 
     private int fireCooldown = 0;
+    private int score = 0;
     
     // Facing direction for shooting
     private double lastDx = 0;
     private double lastDy = -1;
     
-    private boolean gameOver = false;
-    private boolean isUpgrading = false;
+    private GameState state = GameState.START;
     private List<UpgradeManager.UpgradeType> currentChoices;
 
     public GameModel() {
+        reset();
+    }
+
+    public void reset() {
         player = new Player();
         zombies = new ArrayList<>();
         bullets = new ArrayList<>();
         random = new Random();
-        System.out.println("Model initialized.");
+        spawnTimer = 0;
+        currentSpawnThreshold = INITIAL_SPAWN_THRESHOLD;
+        currentZombieSpeed = 2.0;
+        totalFrames = 0;
+        bulletSpeed = 10.0;
+        fireRateThreshold = 20;
+        fireCooldown = 0;
+        score = 0;
+        lastDx = 0;
+        lastDy = -1;
+        state = GameState.PLAYING;
+        System.out.println("Game Reset.");
+    }
+
+    public void start() {
+        if (state == GameState.START) {
+            state = GameState.PLAYING;
+        }
     }
 
     /**
      * Updates the game state. Called every frame.
      */
     public void update(boolean up, boolean down, boolean left, boolean right) {
-        if (gameOver || isUpgrading) return;
+        if (state != GameState.PLAYING) return;
 
         totalFrames++;
         updateDifficulty();
@@ -71,11 +96,9 @@ public class GameModel {
         if (right) dx += 1;
 
         if (dx != 0 || dy != 0) {
-            // Normalize for movement and facing
             double length = Math.sqrt(dx * dx + dy * dy);
             dx /= length;
             dy /= length;
-            
             lastDx = dx;
             lastDy = dy;
         }
@@ -89,12 +112,11 @@ public class GameModel {
         checkCollisions();
         
         if (player.isDead()) {
-            gameOver = true;
+            state = GameState.GAME_OVER;
         }
     }
 
     private void updateDifficulty() {
-        // Every 5 seconds, slightly increase difficulty
         if (totalFrames > 0 && totalFrames % 300 == 0) {
             if (currentSpawnThreshold > 25) {
                 currentSpawnThreshold -= 3;
@@ -113,6 +135,7 @@ public class GameModel {
                 if (dist < 20) {
                     bullets.remove(i);
                     zombies.remove(j);
+                    score += 100; // Award points for kills
                     break;
                 }
             }
@@ -128,7 +151,7 @@ public class GameModel {
     }
 
     public void shoot() {
-        if (fireCooldown <= 0) {
+        if (state == GameState.PLAYING && fireCooldown <= 0) {
             bullets.add(new Bullet(player.getX(), player.getY(), lastDx, lastDy, bulletSpeed));
             fireCooldown = fireRateThreshold;
         }
@@ -180,20 +203,17 @@ public class GameModel {
     }
 
     private void triggerUpgrade() {
-        isUpgrading = true;
+        state = GameState.UPGRADING;
         currentChoices = UpgradeManager.getRandomUpgrades(3);
     }
 
     public void selectUpgrade(int index) {
-        if (isUpgrading && index >= 0 && index < currentChoices.size()) {
+        if (state == GameState.UPGRADING && index >= 0 && index < currentChoices.size()) {
             UpgradeManager.applyUpgrade(this, currentChoices.get(index));
-            isUpgrading = false;
+            state = GameState.PLAYING;
             currentChoices = null;
         }
     }
-
-    public boolean isUpgrading() { return isUpgrading; }
-    public List<UpgradeManager.UpgradeType> getCurrentChoices() { return currentChoices; }
 
     public int getSurvivalTime() {
         return (int) (totalFrames / 60);
@@ -203,5 +223,7 @@ public class GameModel {
     public Player getPlayer() { return player; }
     public List<Zombie> getZombies() { return zombies; }
     public List<Bullet> getBullets() { return bullets; }
-    public boolean isGameOver() { return gameOver; }
+    public GameState getState() { return state; }
+    public List<UpgradeManager.UpgradeType> getCurrentChoices() { return currentChoices; }
+    public int getScore() { return score; }
 }
