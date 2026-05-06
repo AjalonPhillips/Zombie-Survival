@@ -11,12 +11,14 @@ import java.util.Random;
 public class GameModel {
     
     public enum GameState {
-        MENU, PLAYING, UPGRADING, GAME_OVER, OBJECTIVE
+        MENU, PLAYING, UPGRADING, GAME_OVER, OBJECTIVE, OPTIONS
     }
 
     private GameState state = GameState.MENU;
     private int menuIndex = 0;
-    private final String[] menuOptions = {"Start Game", "Objective", "Quit"};
+    private final String[] menuOptions = {"Start Game", "Objective", "Options", "Quit"};
+    
+    private boolean isMouseShoot = false; // Default to Spacebar
 
     // Game Entities
     private Player player;
@@ -87,12 +89,22 @@ public class GameModel {
             switch (menuIndex) {
                 case 0 -> reset(); // Start Game
                 case 1 -> state = GameState.OBJECTIVE; // Objective
-                case 2 -> System.exit(0); // Quit
+                case 2 -> state = GameState.OPTIONS; // Options
+                case 3 -> System.exit(0); // Quit
             }
-        } else if (state == GameState.OBJECTIVE) {
+        } else if (state == GameState.OBJECTIVE || state == GameState.OPTIONS) {
             state = GameState.MENU;
         }
     }
+
+    public void toggleShootControl() {
+        if (state == GameState.OPTIONS) {
+            isMouseShoot = !isMouseShoot;
+            System.out.println("Shoot control set to: " + (isMouseShoot ? "Mouse Click" : "Spacebar"));
+        }
+    }
+
+    public boolean isMouseShoot() { return isMouseShoot; }
 
     /**
      * Updates the game state. Called every frame.

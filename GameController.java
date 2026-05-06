@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -17,7 +19,7 @@ import javax.swing.Timer;
  * This class represents the Controller in the MVC architecture.
  * It contains the main method, connects the Model and View, and handles user input.
  */
-public class GameController implements KeyListener, ActionListener {
+public class GameController implements KeyListener, ActionListener, MouseListener {
     private GameModel model;
     private GameView view;
     private JFrame frame;
@@ -53,8 +55,9 @@ public class GameController implements KeyListener, ActionListener {
         // Set up the JFrame
         setupWindow(isFullscreen);
         
-        // Register key listener
+        // Register listeners
         frame.addKeyListener(this);
+        frame.addMouseListener(this);
         
         // Initialize and start the game loop
         timer = new Timer(16, this); // ~60 FPS
@@ -79,13 +82,25 @@ public class GameController implements KeyListener, ActionListener {
             case KeyEvent.VK_S -> down = true;
             case KeyEvent.VK_A -> left = true;
             case KeyEvent.VK_D -> right = true;
-            case KeyEvent.VK_SPACE -> model.shoot();
+            case KeyEvent.VK_SPACE -> {
+                if (!model.isMouseShoot()) model.shoot();
+            }
             case KeyEvent.VK_1 -> model.selectUpgrade(0);
             case KeyEvent.VK_2 -> model.selectUpgrade(1);
             case KeyEvent.VK_3 -> model.selectUpgrade(2);
             case KeyEvent.VK_UP -> model.navigateMenu(-1);
             case KeyEvent.VK_DOWN -> model.navigateMenu(1);
             case KeyEvent.VK_ENTER -> model.selectMenuOption();
+            case KeyEvent.VK_T -> {
+                if (model.getState() == GameModel.GameState.OPTIONS) {
+                    model.toggleShootControl();
+                }
+            }
+            case KeyEvent.VK_ESCAPE -> {
+                if (model.getState() == GameModel.GameState.OPTIONS || model.getState() == GameModel.GameState.OBJECTIVE) {
+                    model.selectMenuOption(); // Goes back to menu
+                }
+            }
             case KeyEvent.VK_R -> {
                 if (model.getState() == GameModel.GameState.GAME_OVER) {
                     model.reset();
@@ -105,9 +120,22 @@ public class GameController implements KeyListener, ActionListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        // Not used
+    public void keyTyped(KeyEvent e) {}
+
+    // MouseListener methods
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (model.getState() == GameModel.GameState.PLAYING && model.isMouseShoot()) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                model.shoot();
+            }
+        }
     }
+
+    @Override public void mouseReleased(MouseEvent e) {}
+    @Override public void mouseClicked(MouseEvent e) {}
+    @Override public void mouseEntered(MouseEvent e) {}
+    @Override public void mouseExited(MouseEvent e) {}
 
     /**
      * Configures and displays the main game window.

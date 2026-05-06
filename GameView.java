@@ -32,6 +32,7 @@ public class GameView extends JPanel {
         switch (model.getState()) {
             case MENU -> drawMenuScreen(g, width, height);
             case OBJECTIVE -> drawObjectiveScreen(g, width, height);
+            case OPTIONS -> drawOptionsScreen(g, width, height);
             case PLAYING -> drawGame(g, width, height);
             case UPGRADING -> {
                 drawGame(g, width, height); 
@@ -92,6 +93,31 @@ public class GameView extends JPanel {
         
         g.setColor(Color.GRAY);
         drawCenteredString(g, "Press ENTER to return to Menu", height - 100, width);
+    }
+
+    private void drawOptionsScreen(Graphics g, int width, int height) {
+        g.setColor(new Color(20, 20, 20));
+        g.fillRect(0, 0, width, height);
+        
+        g.setColor(Color.RED);
+        g.setFont(new Font("Arial", Font.BOLD, 50));
+        drawCenteredString(g, "OPTIONS", 100, width);
+        
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.PLAIN, 24));
+        drawCenteredString(g, "Gameplay Controls", 200, width);
+        
+        String control = model.isMouseShoot() ? "Left Mouse Click" : "Spacebar";
+        g.setColor(Color.YELLOW);
+        g.setFont(new Font("Arial", Font.BOLD, 28));
+        drawCenteredString(g, "Shoot Button: [ " + control + " ]", 300, width);
+        
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.ITALIC, 18));
+        drawCenteredString(g, "Press 'T' to Toggle Setting - Press ENTER to Go Back", 400, width);
+        
+        g.setColor(Color.GRAY);
+        drawCenteredString(g, "Settings take effect immediately.", height - 100, width);
     }
 
     private void drawGame(Graphics g, int width, int height) {

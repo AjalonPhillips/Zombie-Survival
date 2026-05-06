@@ -121,3 +121,13 @@ Do NOT rewrite the entire project.
 Prompt 11
 For further polish, 
 can you make it so when the window opens the first window that pops up is a choice bewtween having the game windowed and fullscreen? If the user should choose fullscreen, can the boarders in the game (Spawn Points & playable area) be changed to the fullscreen resolution?
+
+Prompt 12
+After the screen asking what perferred resolution, before the game instantly starts can you add a screen before hand that has the options "Start game", "Objective", & "Quit"
+
+Prompt 13
+Can you add one more option to the opening screen that is titles "Options"? in this menu it gives the ability to choose core gameplay controls. Changing the shoot button between spacebar and left mouse click.
+
+Prompt 14
+Troubleshooting
+In the options menu the shooting preference is toggled with T and Enter and leave with the esc key, can you make it so enter is the key that returns to the menu?
