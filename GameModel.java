@@ -19,7 +19,7 @@ public class GameModel {
     private int pauseIndex = 0;
     private final String[] pauseOptions = {"Resume", "Quit Attempt"};
     
-    private boolean isMouseShoot = false; 
+    private boolean isEnvironmentDetailed = true; 
 
     // Game Entities
     private Player player;
@@ -135,11 +135,13 @@ public class GameModel {
         }
     }
 
-    public void toggleShootControl() {
+    public void toggleEnvironment() {
         if (state == GameState.OPTIONS) {
-            isMouseShoot = !isMouseShoot;
+            isEnvironmentDetailed = !isEnvironmentDetailed;
         }
     }
+
+    public boolean isEnvironmentDetailed() { return isEnvironmentDetailed; }
 
     public void togglePause() {
         if (state == GameState.PLAYING) {
@@ -270,8 +272,8 @@ public class GameModel {
                         zombies.remove(j);
                         score += (z.getType() == Zombie.Type.BRUTE) ? 500 : 100;
                         
-                        // Add blood decal (10 second life)
-                        decals.add(new BloodDecal(z.getX(), z.getY(), z.getColor(), 20 + random.nextInt(20), 600));
+                        // Add blood decal (3 second life)
+                        decals.add(new BloodDecal(z.getX(), z.getY(), z.getColor(), 20 + random.nextInt(20), 180));
 
                         if (random.nextDouble() < 0.1) spawnPowerUp(z.getX(), z.getY());
                     }
@@ -450,7 +452,6 @@ public class GameModel {
     public int getHighScore() { return highScore; }
     public int getWidth() { return worldWidth; }
     public int getHeight() { return worldHeight; }
-    public boolean isMouseShoot() { return isMouseShoot; }
     public int getCurrentAmmo() { return currentAmmo; }
     public int getMagSize() { return magSize; }
     public boolean isReloading() { return reloadTimer > 0; }

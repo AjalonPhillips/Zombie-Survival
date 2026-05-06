@@ -158,3 +158,12 @@ Paricle effects
 
 Prompt 20 
 Can all powerups gained flash what was gained at the center of the screen? the text should fade away after about 3 seconds
+
+Prompt 21 
+Can some enviromnetal effects be added to make gameplay be a bit better?
+
+Prompt 22
+In blooddecal.java can it be so the blood isnt permanant? Its almost like the circles left behind are power ups or enemies and overtime could confuse the player
+
+Prompt 23 
+For simplicity remove the option for firing mode i the settign and just have both spacebar and a mouse click be the firing button. Because the setting should be empty give the option to have the background be detailed (rain, darkness, and lighting) be toggleable 

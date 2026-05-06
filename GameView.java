@@ -108,19 +108,30 @@ public class GameView extends JPanel {
         g.setColor(Color.RED);
         g.setFont(new Font("Arial", Font.BOLD, 50));
         drawCenteredString(g, "OPTIONS", 100, width);
+
+        String status = model.isEnvironmentDetailed() ? "Enabled" : "Disabled";
+        g.setColor(Color.YELLOW);
+        g.setFont(new Font("Arial", Font.BOLD, 28));
+        drawCenteredString(g, "Detailed Environment: [ " + status + " ]", 300, width);
+
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.PLAIN, 24));
-        drawCenteredString(g, "Shoot Button: [ " + (model.isMouseShoot() ? "Left Mouse Click" : "Spacebar") + " ]", 300, width);
         g.setFont(new Font("Arial", Font.ITALIC, 18));
         drawCenteredString(g, "Press 'T' to Toggle - Press ENTER to Go Back", 400, width);
+        
+        g.setFont(new Font("Arial", Font.PLAIN, 18));
+        drawCenteredString(g, "(Includes Rain, Dynamic Lighting, and Blood Stains)", 340, width);
     }
 
     private void drawGame(Graphics2D g, int width, int height) {
+        boolean detailed = model.isEnvironmentDetailed();
+
         // Floor Decals (Blood)
-        for (BloodDecal d : model.getDecals()) {
-            int alpha = Math.min(100, d.getLife()); // Fade out if life < 100
-            g.setColor(new Color(d.getColor().getRed(), d.getColor().getGreen(), d.getColor().getBlue(), alpha));
-            g.fillOval((int)d.getX() - d.getSize()/2, (int)d.getY() - d.getSize()/2, d.getSize(), d.getSize());
+        if (detailed) {
+            for (BloodDecal d : model.getDecals()) {
+                int alpha = Math.min(100, (int)(100 * (Math.min(60, d.getLife()) / 60.0)));
+                g.setColor(new Color(d.getColor().getRed(), d.getColor().getGreen(), d.getColor().getBlue(), alpha));
+                g.fillOval((int)d.getX() - d.getSize()/2, (int)d.getY() - d.getSize()/2, d.getSize(), d.getSize());
+            }
         }
 
         // PowerUps
@@ -154,14 +165,16 @@ public class GameView extends JPanel {
             g.fillRect((int)part.getX(), (int)part.getY(), 3, 3);
         }
 
-        // Lighting Effect (Flashlight/Ambient)
-        drawLighting(g, width, height, (int)p.getX(), (int)p.getY());
+        if (detailed) {
+            // Lighting Effect (Flashlight/Ambient)
+            drawLighting(g, width, height, (int)p.getX(), (int)p.getY());
 
-        // Rain Effect
-        g.setColor(new Color(100, 100, 255, 80));
-        g.setStroke(new BasicStroke(1));
-        for (RainDrop r : model.getRaindrops()) {
-            g.drawLine((int)r.getX(), (int)r.getY(), (int)r.getX(), (int)r.getY() + 8);
+            // Rain Effect
+            g.setColor(new Color(100, 100, 255, 80));
+            g.setStroke(new BasicStroke(1));
+            for (RainDrop r : model.getRaindrops()) {
+                g.drawLine((int)r.getX(), (int)r.getY(), (int)r.getX(), (int)r.getY() + 8);
+            }
         }
 
         // UI

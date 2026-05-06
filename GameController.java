@@ -86,8 +86,7 @@ public class GameController implements KeyListener, ActionListener, MouseListene
             case KeyEvent.VK_A -> left = true;
             case KeyEvent.VK_D -> right = true;
             case KeyEvent.VK_SPACE -> {
-                if (!model.isMouseShoot())
-                    model.shoot();
+                model.shoot();
             }
             case KeyEvent.VK_1 -> model.selectUpgrade(0);
             case KeyEvent.VK_2 -> model.selectUpgrade(1);
@@ -109,6 +108,8 @@ public class GameController implements KeyListener, ActionListener, MouseListene
             case KeyEvent.VK_ENTER -> {
                 if (model.getState() == GameModel.GameState.PAUSED) {
                     model.selectPauseOption();
+                } else if (model.getState() == GameModel.GameState.OPTIONS) {
+                    model.selectMenuOption(); // Go back
                 } else {
                     model.selectMenuOption();
                 }
@@ -116,7 +117,7 @@ public class GameController implements KeyListener, ActionListener, MouseListene
             case KeyEvent.VK_P -> model.togglePause();
             case KeyEvent.VK_T -> {
                 if (model.getState() == GameModel.GameState.OPTIONS) {
-                    model.toggleShootControl();
+                    model.toggleEnvironment();
                 }
             }
             case KeyEvent.VK_ESCAPE -> {
@@ -164,10 +165,8 @@ public class GameController implements KeyListener, ActionListener, MouseListene
                 return;
             }
 
-            if (model.isMouseShoot()) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    model.shoot(e.getX(), e.getY());
-                }
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                model.shoot(e.getX(), e.getY());
             }
         }
     }
