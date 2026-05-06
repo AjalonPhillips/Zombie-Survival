@@ -39,13 +39,20 @@ public class GameModel {
     
     private GameState state = GameState.START;
     private List<UpgradeManager.UpgradeType> currentChoices;
+    
+    private int worldWidth;
+    private int worldHeight;
 
-    public GameModel() {
+    public GameModel(int width, int height) {
+        this.worldWidth = width;
+        this.worldHeight = height;
         reset();
     }
 
     public void reset() {
-        player = new Player();
+        player = new Player(); 
+        player.setPosition(worldWidth / 2.0, worldHeight / 2.0);
+        
         zombies = new ArrayList<>();
         bullets = new ArrayList<>();
         random = new Random();
@@ -60,7 +67,7 @@ public class GameModel {
         lastDx = 0;
         lastDy = -1;
         state = GameState.PLAYING;
-        System.out.println("Game Reset.");
+        System.out.println("Game Reset with dimensions: " + worldWidth + "x" + worldHeight);
     }
 
     public void start() {
@@ -170,7 +177,7 @@ public class GameModel {
         for (int i = bullets.size() - 1; i >= 0; i--) {
             Bullet b = bullets.get(i);
             b.update();
-            if (b.getX() < -50 || b.getX() > 850 || b.getY() < -50 || b.getY() > 650) {
+            if (b.getX() < -50 || b.getX() > worldWidth + 50 || b.getY() < -50 || b.getY() > worldHeight + 50) {
                 bullets.remove(i);
             }
         }
@@ -194,10 +201,10 @@ public class GameModel {
         int edge = random.nextInt(4);
         double x = 0, y = 0;
         switch (edge) {
-            case 0 -> { x = random.nextDouble() * 800; y = -30; }
-            case 1 -> { x = random.nextDouble() * 800; y = 630; }
-            case 2 -> { x = -30; y = random.nextDouble() * 600; }
-            case 3 -> { x = 830; y = random.nextDouble() * 600; }
+            case 0 -> { x = random.nextDouble() * worldWidth; y = -30; }
+            case 1 -> { x = random.nextDouble() * worldWidth; y = worldHeight + 30; }
+            case 2 -> { x = -30; y = random.nextDouble() * worldHeight; }
+            case 3 -> { x = worldWidth + 30; y = random.nextDouble() * worldHeight; }
         }
         zombies.add(new Zombie(x, y));
     }
@@ -226,4 +233,6 @@ public class GameModel {
     public GameState getState() { return state; }
     public List<UpgradeManager.UpgradeType> getCurrentChoices() { return currentChoices; }
     public int getScore() { return score; }
+    public int getWidth() { return worldWidth; }
+    public int getHeight() { return worldHeight; }
 }

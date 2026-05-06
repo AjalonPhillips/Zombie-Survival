@@ -28,6 +28,11 @@ public class Player {
         this.speed += amount;
     }
 
+    public void setPosition(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public void takeDamage(int amount) {
         this.health -= amount;
         if (this.health < 0) this.health = 0;

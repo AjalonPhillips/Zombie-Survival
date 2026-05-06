@@ -12,13 +12,11 @@ import java.util.List;
  * It extends JPanel and is responsible for rendering the game state.
  */
 public class GameView extends JPanel {
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
     private GameModel model;
 
     public GameView(GameModel model) {
         this.model = model;
-        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        this.setPreferredSize(new Dimension(model.getWidth(), model.getHeight()));
         this.setBackground(Color.DARK_GRAY);
     }
 
@@ -28,35 +26,38 @@ public class GameView extends JPanel {
         
         if (model == null) return;
 
+        int width = model.getWidth();
+        int height = model.getHeight();
+
         switch (model.getState()) {
-            case START -> drawStartScreen(g);
-            case PLAYING -> drawGame(g);
+            case START -> drawStartScreen(g, width, height);
+            case PLAYING -> drawGame(g, width, height);
             case UPGRADING -> {
-                drawGame(g); // Draw game in background
-                drawUpgradeScreen(g);
+                drawGame(g, width, height); 
+                drawUpgradeScreen(g, width, height);
             }
             case GAME_OVER -> {
-                drawGame(g); // Draw game in background
-                drawGameOverScreen(g);
+                drawGame(g, width, height); 
+                drawGameOverScreen(g, width, height);
             }
         }
     }
 
-    private void drawStartScreen(Graphics g) {
+    private void drawStartScreen(Graphics g, int width, int height) {
         g.setColor(new Color(0, 0, 0, 180));
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+        g.fillRect(0, 0, width, height);
         
         g.setColor(Color.RED);
         g.setFont(new Font("Arial", Font.BOLD, 60));
-        drawCenteredString(g, "ZOMBIE SURVIVAL", HEIGHT / 2 - 50);
+        drawCenteredString(g, "ZOMBIE SURVIVAL", height / 2 - 50, width);
         
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.PLAIN, 24));
-        drawCenteredString(g, "Move with WASD - Shoot with Space", HEIGHT / 2 + 20);
-        drawCenteredString(g, "Press ENTER to Start", HEIGHT / 2 + 80);
+        drawCenteredString(g, "Move with WASD - Shoot with Space", height / 2 + 20, width);
+        drawCenteredString(g, "Press ENTER to Start", height / 2 + 80, width);
     }
 
-    private void drawGame(Graphics g) {
+    private void drawGame(Graphics g, int width, int height) {
         // Render Bullets
         g.setColor(Color.YELLOW);
         for (Bullet bullet : model.getBullets()) {
@@ -82,54 +83,54 @@ public class GameView extends JPanel {
         
         String timeStr = "Survived: " + model.getSurvivalTime() + "s";
         int timeWidth = g.getFontMetrics().stringWidth(timeStr);
-        g.drawString(timeStr, WIDTH - timeWidth - 20, 30);
+        g.drawString(timeStr, width - timeWidth - 20, 30);
     }
 
-    private void drawUpgradeScreen(Graphics g) {
+    private void drawUpgradeScreen(Graphics g, int width, int height) {
         g.setColor(new Color(0, 0, 0, 200));
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+        g.fillRect(0, 0, width, height);
         
         g.setColor(Color.YELLOW);
         g.setFont(new Font("Arial", Font.BOLD, 40));
-        drawCenteredString(g, "CHOOSE AN UPGRADE", 150);
+        drawCenteredString(g, "CHOOSE AN UPGRADE", 150, width);
         
         List<UpgradeManager.UpgradeType> choices = model.getCurrentChoices();
         g.setFont(new Font("Arial", Font.PLAIN, 24));
         for (int i = 0; i < choices.size(); i++) {
             g.setColor(new Color(255, 255, 255, 50));
-            g.fillRect(WIDTH/2 - 200, 220 + i*80, 400, 60);
+            g.fillRect(width/2 - 200, 220 + i*80, 400, 60);
             g.setColor(Color.WHITE);
-            g.drawRect(WIDTH/2 - 200, 220 + i*80, 400, 60);
+            g.drawRect(width/2 - 200, 220 + i*80, 400, 60);
             
             String choiceStr = (i + 1) + ". " + choices.get(i).description;
-            drawCenteredString(g, choiceStr, 258 + i*80);
+            drawCenteredString(g, choiceStr, 258 + i*80, width);
         }
         
         g.setColor(Color.GRAY);
         g.setFont(new Font("Arial", Font.ITALIC, 18));
-        drawCenteredString(g, "Press 1, 2, or 3 to select", 500);
+        drawCenteredString(g, "Press 1, 2, or 3 to select", 500, width);
     }
 
-    private void drawGameOverScreen(Graphics g) {
+    private void drawGameOverScreen(Graphics g, int width, int height) {
         g.setColor(new Color(0, 0, 0, 220));
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+        g.fillRect(0, 0, width, height);
         
         g.setColor(Color.RED);
         g.setFont(new Font("Arial", Font.BOLD, 70));
-        drawCenteredString(g, "GAME OVER", HEIGHT / 2 - 60);
+        drawCenteredString(g, "GAME OVER", height / 2 - 60, width);
         
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.PLAIN, 28));
-        drawCenteredString(g, "Final Score: " + model.getScore(), HEIGHT / 2 + 20);
-        drawCenteredString(g, "Time Survived: " + model.getSurvivalTime() + "s", HEIGHT / 2 + 60);
+        drawCenteredString(g, "Final Score: " + model.getScore(), height / 2 + 20, width);
+        drawCenteredString(g, "Time Survived: " + model.getSurvivalTime() + "s", height / 2 + 60, width);
         
         g.setColor(Color.YELLOW);
         g.setFont(new Font("Arial", Font.BOLD, 20));
-        drawCenteredString(g, "Press 'R' to Restart", HEIGHT / 2 + 130);
+        drawCenteredString(g, "Press 'R' to Restart", height / 2 + 130, width);
     }
 
-    private void drawCenteredString(Graphics g, String text, int y) {
-        int x = (WIDTH - g.getFontMetrics().stringWidth(text)) / 2;
+    private void drawCenteredString(Graphics g, String text, int y, int width) {
+        int x = (width - g.getFontMetrics().stringWidth(text)) / 2;
         g.drawString(text, x, y);
     }
 }

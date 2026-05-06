@@ -1,8 +1,13 @@
+import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
@@ -24,12 +29,29 @@ public class GameController implements KeyListener, ActionListener {
     private Timer timer;
 
     public GameController() {
+        // Choice dialog
+        String[] options = {"Windowed", "Fullscreen"};
+        int choice = JOptionPane.showOptionDialog(null, 
+                "Choose Display Mode", "Zombie Survival",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, options, options[0]);
+
+        int width = 800;
+        int height = 600;
+        boolean isFullscreen = (choice == 1);
+
+        if (isFullscreen) {
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            width = screenSize.width;
+            height = screenSize.height;
+        }
+
         // Initialize Model and View
-        this.model = new GameModel();
+        this.model = new GameModel(width, height);
         this.view = new GameView(model);
 
         // Set up the JFrame
-        setupWindow();
+        setupWindow(isFullscreen);
         
         // Register key listener
         frame.addKeyListener(this);
@@ -88,18 +110,33 @@ public class GameController implements KeyListener, ActionListener {
     /**
      * Configures and displays the main game window.
      */
-    private void setupWindow() {
+    private void setupWindow(boolean isFullscreen) {
         frame = new JFrame("Zombie Survival Roguelike");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
+        if (isFullscreen) {
+            frame.setUndecorated(true);
+            frame.setResizable(false);
+            
+            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                    .getDefaultScreenDevice();
+            
+            if (gd.isFullScreenSupported()) {
+                gd.setFullScreenWindow(frame);
+            } else {
+                frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            }
+        }
+
         // Add the View (JPanel) to the JFrame
         frame.add(view);
         
-        // Adjust the window size to fit the preferred size of the View
-        frame.pack();
-        
-        // Center the window on the screen
-        frame.setLocationRelativeTo(null);
+        if (!isFullscreen) {
+            // Adjust the window size to fit the preferred size of the View
+            frame.pack();
+            // Center the window on the screen
+            frame.setLocationRelativeTo(null);
+        }
         
         // Make the window visible
         frame.setVisible(true);
